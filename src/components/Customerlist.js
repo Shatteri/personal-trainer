@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-theme-material.css';
 import Button from '@mui/material/Button';
 import Addcustomer from './Addcustomer';
 import Editcustomer from './Editcustomer';
+import {CSVLink} from 'react-csv';
 
 function Customerlist() {
 
@@ -52,7 +53,7 @@ function Customerlist() {
   };
 
   const columns = [
-    { field: "firstname", filter: 'agTextColumnFilter' },
+    { field: "firstname", filter: 'agTextColumnFilter', },
     { field: "lastname", filter: 'agTextColumnFilter' },
     { field: "city", filter: 'agTextColumnFilter' },
     { field: "streetaddress", filter: 'agTextColumnFilter' },
@@ -84,10 +85,25 @@ function Customerlist() {
     }
   ];
 
+  const headers = [
+    { label: "First Name", key: "firstname" },
+    { label: "Last Name", key: "lastname" },
+    { label: "Email", key: "email" },
+    { label: "Phone", key: "phone" },
+    { label: "City", key: "city" },
+    { label: "Streetaddress", key: "streetaddress" },
+    { label: "Postcode", key: "postcode" }
+    ];
+
   return (
     <div className="ag-theme-material"
       style={{ height: '900px', width: '100%', margin: 'center' }} >
       <Addcustomer saveCustomer={saveCustomer} />
+      <CSVLink headers={headers} data={customers} filename="Customers" style={{ textDecoration: 'none' }}>
+        <Button variant="outlined" color="primary">
+          Download Customers
+        </Button>
+      </CSVLink>
       <AgGridReact rowData={customers} columnDefs={columns}></AgGridReact>
     </div>
   );

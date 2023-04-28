@@ -5,6 +5,7 @@ import'ag-grid-community/styles/ag-theme-material.css';
 import dayjs from 'dayjs';
 import Addtraining from './Addtraining';
 import Button from'@mui/material/Button';
+import JqxScheduler, { jqx } from 'jqwidgets-scripts/jqwidgets-react-tsx/jqxscheduler';
 
 function Traininglist(){
 
@@ -70,12 +71,52 @@ function Traininglist(){
         }
     ];
 
+    const source = {
+        dataType: "array",
+        dataFields: [
+          { name: 'activity', type: 'string' },
+          { name: 'date', type: 'date' },
+        ],
+        localData: trainings
+    };
+
+    const a = {
+        date: new jqx.date(new Date()),
+        source: new jqx.dataAdapter(source),
+        resources: {
+          colorScheme: "scheme05",
+          dataField: "calendar",
+          source: new jqx.dataAdapter(source)
+        },
+        appointmentDataFields: {
+          from: "date",
+          to: "date",
+          subject: "activity",
+          resourceId: "calendar"
+        },
+        views: [
+          'dayView',
+          'weekView',
+          'monthView'
+        ]
+    }
+
     return (
     <div>
         {customer && <h2>{customer.firstname + " " + customer.lastname}</h2>}
         <div className="ag-theme-material" style={{height: '900px', width: '100%'}} >
         <Addtraining saveTraining={saveTraining} customer={customer} />
             <AgGridReact rowData={trainings} columnDefs={columns}></AgGridReact>
+            <JqxScheduler
+                width={document.body.offsetWidth}
+                date={a.date}
+                source={a.source}
+                showLegend={true}
+                view={"weekView"}
+                appointmentDataFields={a.appointmentDataFields}
+                resources={a.resources}
+                views={a.views}
+            />
         </div>
     </div>
     );
